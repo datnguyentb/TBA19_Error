@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Tra Toàn Bộ Mã Lỗi Tetra Pak (10-116)</title>
+    <style>
+        :root {
+            --tetra-blue: #004f9f;
+            --tetra-light: #f8f9fa;
+            --alarm-red: #d32f2f;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--tetra-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .search-area {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 15px 0;
+            z-index: 100;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 15px 25px;
+            font-size: 18px;
+            border: 2px solid var(--tetra-blue);
+            border-radius: 50px;
+            outline: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--tetra-blue);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        tr:hover { background-color: #f1f7ff; }
+
+        .no-col { font-weight: bold; color: var(--alarm-red); width: 40px; }
+        .instruction-col { background-color: #fffef0; border-left: 3px solid #f1c40f; }
+        .effect-tag { font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; text-decoration: underline; }
+
+        @media (max-width: 800px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+            tr { border: 1px solid #ccc; margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
+            td { padding-left: 40%; position: relative; border: none; border-bottom: 1px solid #eee; }
+            td:before { content: attr(data-label); position: absolute; left: 15px; font-weight: bold; color: var(--tetra-blue); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1 style="margin:0; color:var(--tetra-blue);">Hệ Thống Báo Lỗi Tetra Pak</h1>
+            <p style="margin:5px 0 0; color:#666;">Mã hiệu: OM-81688-0104 | Bảng điều khiển</p>
+        </div>
+        <div style="text-align:right; font-size: 13px;">Dữ liệu: Mã 10 - 116</div>
+    </header>
+
+    <div class="search-area">
+        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Gõ mã số, tên linh kiện hoặc hiện tượng lỗi để tìm...">
+    </div>
+
+    <table id="alarmTable">
+        <thead>
+            <tr>
+                <th>Số</th>
+                <th>Cảnh báo & Nguyên nhân</th>
+                <th>Hệ quả (Effect)</th>
+                <th>Hướng dẫn xử lý (Instruction)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="no-col">10</td>
+                <td>Nguồn nước làm mát: Áp suất thấp</td>
+                <td>Báo động. Nếu áp suất sai > 5 phút, máy chuyển sang Drying</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">11</td>
+                <td>Nguồn khí chính: Áp suất thấp</td>
+                <td>Máy reset về Zero</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">12</td>
+                <td>Công tắc an toàn: Cửa/nắp mở hoặc cắm tay quay</td>
+                <td>Dừng an ninh; Motor dừng; Reset về Venting</td>
+                <td class="instruction-col">Kiểm tra cửa; Đặt lại công tắc tay quay. Xem mục Stop</td>
+            </tr>
+            <tr>
+                <td class="no-col">13/14</td>
+                <td>Cửa ASU/cửa sau mở hoặc Nút dừng khẩn cấp</td>
+                <td>Dừng ngắn; Reset về Zero hoặc Venting</td>
+                <td class="instruction-col">Đóng cửa và tiếp tục; Xem mục Stop</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">15</td>
+                <td>Hệ thống hàm (Jaw): Quá tải</td>
+                <td>Máy reset về Drying</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">18</td>
+                <td>Quá tải: Motor quá tải</td>
+                <td>Dừng an ninh</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">20/21</td>
+                <td>Bôi trơn: Áp suất thấp hoặc Mức thấp</td>
+                <td>Dừng ngắn; Báo động sau 1h</td>
+                <td class="instruction-col">Nhấn nút bôi trơn thủ công; Châm dầu</td>
+            </tr>
+            <tr>
+                <td class="no-col">24</td>
+                <td>Tốc độ máy quá cao hoặc Vượt quá thời gian chờ Preheating</td>
+                <td>Máy reset về Drying hoặc Preheating I</td>
+                <td class="instruction-col">Nhấn Reset báo động; Program Up; Gọi kỹ thuật</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">25</td>
+                <td>Lỗi PLC: Pin yếu, bộ nhớ đầy, sốc điện</td>
+                <td>Báo động</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">26</td>
+                <td>Lỗi bộ mã hóa góc (Angle encoder)</td>
+                <td>Reset về Preheating II hoặc Drying</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">30</td>
+                <td>Bộ tách (Separator): Mức nước cao</td>
+                <td>Máy reset về Zero</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">32</td>
+                <td>Máy nén khí vô trùng: Áp suất thấp</td>
+                <td>Máy reset về Zero</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">34</td>
+                <td>Hệ thống phun: Lỗi nạp hoặc phun</td>
+                <td>Reset về Preheating III hoặc Venting</td>
+                <td class="instruction-col">Reset báo động và tăng bước máy</td>
+            </tr>
+            <tr>
+                <td class="no-col">37</td>
+                <td>Vật liệu bao bì: Nguồn cung thấp hoặc Lỗi nối ASU</td>
+                <td>Báo động; Dừng ngắn</td>
+                <td class="instruction-col">Dán nối cuộn mới hoặc nối thủ công</td>
+            </tr>
+            <tr>
+                <td class="no-col">38</td>
+                <td>Vật liệu bao bì: Đứt cuộn (trong/ngoài buồng)</td>
+                <td>Máy reset về Drying</td>
+                <td class="instruction-col">Cắt bao bì thừa; Dán nối lại; Xem trang 240</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">45</td>
+                <td>Van sản phẩm (Van A): Chưa nhấn OK hoặc Không sản phẩm</td>
+                <td>Báo động hoặc reset về Drying</td>
+                <td class="instruction-col">Nhấn nút OK; Liên hệ quản lý xác nhận</td>
+            </tr>
+            <tr>
+                <td class="no-col">49/50</td>
+                <td>Bể tiệt trùng: Mức dịch sai hoặc mức nước thấp</td>
+                <td>Dừng ngắn hoặc Báo động</td>
+                <td class="instruction-col">Gọi kỹ thuật; Châm thêm nước</td>
+            </tr>
+            <tr>
+                <td class="no-col">52/53</td>
+                <td>Bể tiệt trùng: Nhiệt độ thấp (dịch/nước)</td>
+                <td>Dừng ngắn hoặc reset về Drying</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">55</td>
+                <td>Mắt thần (Photocells): Mất tín hiệu</td>
+                <td>Báo động hoặc reset về Drying</td>
+                <td class="instruction-col">Vệ sinh mắt thần; Kiểm tra vị trí</td>
+            </tr>
+            <tr>
+                <td class="no-col">58</td>
+                <td>Gia nhiệt cảm ứng TS: Lỗi IH unit/cáp</td>
+                <td>Máy reset về Drying</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">61</td>
+                <td>Bộ gấp cuối (Final Folder): Lỗi xoay</td>
+                <td>Dừng an ninh</td>
+                <td class="instruction-col">Dọn sạch hộp hỏng ngay; Gọi kỹ thuật</td>
+            </tr>
+            <tr>
+                <td class="no-col">64</td>
+                <td>Side feeder tắc nghẽn hoặc Ống khí vô trùng sai vị trí</td>
+                <td>Dừng an ninh hoặc reset về Venting</td>
+                <td class="instruction-col">Dọn hộp hỏng; Reset side feeder; Kiểm tra ống khí</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">68</td>
+                <td>Vòi phun LS (ngắn): Phần tử bị hỏng</td>
+                <td>Báo động; Reset về Venting</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">74</td>
+                <td>Dán dải (SA): Đứt dải LS hoặc Inching sai</td>
+                <td>Reset về Drying hoặc ngừng Inching</td>
+                <td class="instruction-col">Luồn lại dải; Cắt dải</td>
+            </tr>
+
+            <tr>
+                <td class="no-col">75</td>
+                <td>Ống nạp dưới: Sai vị trí</td>
+                <td>Báo động hoặc reset về Drying</td>
+                <td class="instruction-col">Kiểm tra kết nối ống nạp; Gọi kỹ thuật</td>
+            </tr>
+            <tr>
+                <td class="no-col">77</td>
+                <td>Đầu ra bộ gấp cuối: Tắc nghẽn</td>
+                <td>Dừng an ninh</td>
+                <td class="instruction-col">Dọn hộp hỏng; Reset outfeed; Xem mục Stop</td>
+            </tr>
+            <tr>
+                <td class="no-col">78-81</td>
+                <td>Dán tai (Flap sealing): Sai nhiệt độ (Trái/Phải/Trên/Dưới)</td>
+                <td>Dừng ngắn</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">101</td>
+                <td>Thanh nhiệt: Nhiệt độ thấp</td>
+                <td>Dừng ngắn</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">102/103</td>
+                <td>Băng dán (Patch/Tab strip): Sắp hết dải</td>
+                <td>Báo động; Dừng ngắn</td>
+                <td class="instruction-col">Thay dải mới</td>
+            </tr>
+            <tr>
+                <td class="no-col">104/105</td>
+                <td>Thiếu Patch hoặc Tab</td>
+                <td>Dừng ngắn</td>
+                <td class="instruction-col">Xem mục thiếu Tab/Patch trang 242</td>
+            </tr>
+            <tr>
+                <td class="no-col">107</td>
+                <td>Servomotor: Lỗi motor</td>
+                <td>Dừng ngắn; Vô hiệu hóa PullTab</td>
+                <td class="instruction-col">Gọi kỹ thuật viên</td>
+            </tr>
+            <tr>
+                <td class="no-col">115</td>
+                <td>Trượt giấy: Trục PullTab bị nhả</td>
+                <td>Dừng ngắn; Vô hiệu PullTab</td>
+                <td class="instruction-col">Áp lại trục; Xem trang 244</td>
+            </tr>
+            <tr>
+                <td class="no-col">116</td>
+                <td>Đơn vị rác: Đầy rác</td>
+                <td>Báo động; Dừng ngắn</td>
+                <td class="instruction-col">Đổ rác</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+function filterTable() {
+    let input = document.getElementById("searchInput");
+    let filter = input.value.toUpperCase();
+    let table = document.getElementById("alarmTable");
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let textContent = tr[i].textContent || tr[i].innerText;
+        tr[i].style.display = textContent.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+}
+</script>
+
+</body>
+</html>
