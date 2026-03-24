@@ -3,343 +3,766 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Tra Toàn Bộ Mã Lỗi Tetra Pak (10-116)</title>
+    <title>Hệ Thống Cảnh Báo TBA/19</title>
     <style>
         :root {
-            --tetra-blue: #004f9f;
-            --tetra-light: #f8f9fa;
-            --alarm-red: #d32f2f;
-            --border-color: #dee2e6;
+            --primary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --border-color: #ddd;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px;
-            background-color: #e9ecef;
-            color: #333;
+            line-height: 1.6;
         }
 
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid var(--tetra-blue);
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            text-transform: uppercase;
             margin-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
             padding-bottom: 10px;
         }
 
-        .search-area {
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 15px 0;
-            z-index: 100;
+        /* --- SEARCH BOX --- */
+        /* Style cho nút bấm cạnh thanh tìm kiếm */
+.search-container {
+            max-width: 600px;
+            margin: 0 auto 25px auto;
+            position: relative;
         }
 
-        #searchInput {
+        .search-box {
             width: 100%;
-            padding: 15px 25px;
-            font-size: 18px;
-            border: 2px solid var(--tetra-blue);
-            border-radius: 50px;
+            padding: 12px 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            font-size: 16px;
             outline: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* --- TABLE STYLES --- */
+        .table-container {
+            overflow-x: auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            background: white;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+        }
+
+        thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            text-align: left;
         }
 
         th {
-            background-color: var(--tetra-blue);
-            color: white;
-            padding: 15px;
-            text-align: left;
+            font-weight: 600;
             text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
 
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: top;
-            line-height: 1.5;
+        tbody tr:nth-child(even) { background-color: #f8f9fa; }
+        tbody tr:hover { background-color: #f1f1f1; transition: 0.2s; }
+
+        .no-column { width: 50px; text-align: center; font-weight: bold; }
+        .alarm-column { width: 200px; color: #2980b9; font-weight: 600; }
+        
+        /* Màu sắc trạng thái */
+        .effect-critical { color: #e74c3c; font-weight: bold; }
+        .effect-warning { color: #d35400; font-weight: bold; }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { 
+                display: block; 
+            }
+            
+            thead tr { 
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr { 
+                margin-bottom: 15px; 
+                border: 2px solid var(--primary-color);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            td { 
+                border: none;
+                border-bottom: 1px solid #eee; 
+                position: relative;
+                padding-left: 45% !important; 
+                text-align: left !important;
+                white-space: normal;
+            }
+
+            td:before { 
+                position: absolute;
+                top: 12px;
+                left: 15px;
+                width: 40%; 
+                padding-right: 10px; 
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--primary-color);
+                content: attr(data-label);
+                text-transform: uppercase;
+                font-size: 0.75rem;
+            }
+            
+            .no-column { background: #eee; width: auto; }
         }
 
-        tr:nth-child(even) { background-color: #fcfcfc; }
-        tr:hover { background-color: #f1f7ff; }
-
-        .no-col { font-weight: bold; color: var(--alarm-red); width: 40px; }
-        .instruction-col { background-color: #fffef0; border-left: 3px solid #f1c40f; }
-        .effect-tag { font-size: 12px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; text-decoration: underline; }
-
-        @media (max-width: 800px) {
-            table, thead, tbody, th, td, tr { display: block; }
-            thead { display: none; }
-            tr { border: 1px solid #ccc; margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
-            td { padding-left: 40%; position: relative; border: none; border-bottom: 1px solid #eee; }
-            td:before { content: attr(data-label); position: absolute; left: 15px; font-weight: bold; color: var(--tetra-blue); }
+        /* --- PRINT STYLES --- */
+        @media print {
+        @page {
+            size: A4 landscape; /* Ép in ngang để bảng không bị hẹp */
+            margin: 1cm;
         }
+
+        /* 1. Reset toàn bộ về mặc định để tránh chồng chéo */
+        html, body {
+            background: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 10pt;
+        }
+
+        .search-container, .search-box { display: none !important; } /* Ẩn tìm kiếm */
+
+        /* 2. Ép bảng hiển thị đúng dạng table (không bị block như mobile) */
+        .table-container { box-shadow: none !important; border-radius: 0 !important; width: 100% !important; }
+        table { 
+            display: table !important; 
+            width: 100% !important; 
+            border-collapse: collapse !important;
+            border: 0.5pt solid black !important;
+        }
+
+        thead { display: table-header-group !important; } /* Hiện tiêu đề ở mỗi trang */
+        tr { display: table-row !important; page-break-inside: avoid !important; }
+        
+        th, td { 
+            display: table-cell !important; /* Ép về ô bảng */
+            border: 0.5pt solid black !important; /* Nét in mảnh sắc sảo */
+            padding: 6pt !important;
+            color: black !important;
+            background: transparent !important;
+        }
+
+        th { background-color: #eeeeee !important; -webkit-print-color-adjust: exact; }
+        
+        /* 3. Tắt nội dung phụ của mobile */
+        td:before { display: none !important; }
+        td { padding-left: 8px !important; }
+
+        /* 4. Định dạng cột */
+        .no-column { width: 30pt !important; text-align: center; }
+        .alarm-column { font-weight: bold; width: 120pt !important; }
+    }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <div>
-            <h1 style="margin:0; color:var(--tetra-blue);">Hệ Thống Báo Lỗi Tetra Pak</h1>
-            <p style="margin:5px 0 0; color:#666;">Mã hiệu: OM-81688-0104 | Bảng điều khiển</p>
-        </div>
-        <div style="text-align:right; font-size: 13px;">Dữ liệu: Mã 10 - 116</div>
-    </header>
+    <h2>Danh mục Cảnh báo & Xử lý sự cố TBA/19</h2>
 
-    <div class="search-area">
-        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Gõ mã số, tên linh kiện hoặc hiện tượng lỗi để tìm...">
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm kiếm mã lỗi, tên cảnh báo hoặc nguyên nhân...">
     </div>
 
-    <table id="alarmTable">
-        <thead>
-            <tr>
-                <th>Số</th>
-                <th>Cảnh báo & Nguyên nhân</th>
-                <th>Hệ quả (Effect)</th>
-                <th>Hướng dẫn xử lý (Instruction)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="no-col">10</td>
-                <td>Nguồn nước làm mát: Áp suất thấp</td>
-                <td>Báo động. Nếu áp suất sai > 5 phút, máy chuyển sang Drying</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">11</td>
-                <td>Nguồn khí chính: Áp suất thấp</td>
-                <td>Máy reset về Zero</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">12</td>
-                <td>Công tắc an toàn: Cửa/nắp mở hoặc cắm tay quay</td>
-                <td>Dừng an ninh; Motor dừng; Reset về Venting</td>
-                <td class="instruction-col">Kiểm tra cửa; Đặt lại công tắc tay quay. Xem mục Stop</td>
-            </tr>
-            <tr>
-                <td class="no-col">13/14</td>
-                <td>Cửa ASU/cửa sau mở hoặc Nút dừng khẩn cấp</td>
-                <td>Dừng ngắn; Reset về Zero hoặc Venting</td>
-                <td class="instruction-col">Đóng cửa và tiếp tục; Xem mục Stop</td>
-            </tr>
+    <div class="table-container">
+        <table id="alarmTable">
+            <thead>
+                <tr>
+                    <th class="no-column">NO.</th>
+                    <th>Alarm</th>
+                    <th>Cause</th>
+                    <th>Effect</th>
+                    <th>Instruction</th>
+                </tr>
+            </thead>
+            <tbody id="alarm-body">
+                </tbody>
+        </table>
+    </div>
 
-            <tr>
-                <td class="no-col">15</td>
-                <td>Hệ thống hàm (Jaw): Quá tải</td>
-                <td>Máy reset về Drying</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">18</td>
-                <td>Quá tải: Motor quá tải</td>
-                <td>Dừng an ninh</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">20/21</td>
-                <td>Bôi trơn: Áp suất thấp hoặc Mức thấp</td>
-                <td>Dừng ngắn; Báo động sau 1h</td>
-                <td class="instruction-col">Nhấn nút bôi trơn thủ công; Châm dầu</td>
-            </tr>
-            <tr>
-                <td class="no-col">24</td>
-                <td>Tốc độ máy quá cao hoặc Vượt quá thời gian chờ Preheating</td>
-                <td>Máy reset về Drying hoặc Preheating I</td>
-                <td class="instruction-col">Nhấn Reset báo động; Program Up; Gọi kỹ thuật</td>
-            </tr>
+    <script>
+        // Dữ liệu mảng (Bạn hãy dán toàn bộ các mục từ 10 đến 116 vào đây)
+        const alarmData = [
+            { no: "10", alarm: "Cấp nước làm mát (Cooling water supply)", cause: "Áp suất thấp", effect: "Báo động. Nếu áp suất không đúng > 5 phút, máy chuyển sang Sấy (Drying).", instruction: "Gọi kỹ thuật viên." },
+            { no: "11", alarm: "Cấp khí chính (Main air supply)", cause: "Áp suất thấp", effect: "Máy reset về Zero.", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "12", 
+                alarm: "Công tắc an toàn (Safety switch)", 
+                cause: "a. Cửa hoặc nắp mở<br>b. Tay quay đang cắm<br>c. Cửa ASU/bên/sau mở<br>d. Cửa sau ASU mở", 
+                effect: "a. Dừng an toàn (Security stop).<br>b. Reset về Thông khí (Venting).<br>c. Báo động. Vô hiệu hóa ghép mí.<br>d. Dừng ngắn (Short stop).", 
+                instruction: "Kiểm tra cửa/nắp hoặc reset tay quay. Xem mục Stop." 
+            },
+            { no: "13", alarm: "Dừng khẩn cấp (Emergency stop)", cause: "Nút dừng khẩn cấp được nhấn", effect: "Máy reset về Zero.", instruction: "Xem mục Stop." },
+            { 
+                no: "14", 
+                alarm: "Giám sát cửa buồng vô trùng", 
+                cause: "Cửa mở", 
+                effect: "- Bước Sấy trở lên: Chuyển sang Thông khí<br>- Bước thấp hơn: Đóng cửa tiếp tục", 
+                instruction: "Xem mục Stop hoặc đóng cửa." 
+            },
+            { no: "15", alarm: "Hệ thống hàm kẹp (Jaw system)", cause: "Quá tải", effect: "Máy chuyển sang Sấy (Drying)", instruction: "Gọi kỹ thuật viên." },
+            { no: "16", alarm: "Đồng bộ (Synchronisation)", cause: "Bộ gấp cuối chưa đồng bộ", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            // Mục 17 chia làm 2 nhánh
+            { no: "17a", alarm: "HI (nếu có lắp)", cause: "HI đang hoạt động", effect: "Chỉ hiển thị thông báo", instruction: "Không cần hành động nếu đang sản xuất." },
+            { no: "17b", alarm: "HL (nếu có lắp)", cause: "HL đang hoạt động", effect: "Chỉ hiển thị thông báo", instruction: "Không cần hành động nếu đang sản xuất." },
+        { no: "18", alarm: "Quá tải (Overload)", cause: "Động cơ quá tải", effect: "Dừng an toàn (Security stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "19", alarm: "Chế độ bảo trì (Service state)", cause: "Công tắc chìa khóa bảo trì được kích hoạt", effect: "Chỉ hiển thị thông báo", instruction: "Chỉ được sử dụng bởi nhân viên bảo trì." },
+            { no: "20", alarm: "Bôi trơn (Lubrication)", cause: "Áp suất thấp", effect: "Dừng ngắn (Short stop)", instruction: "Nhấn nút Manual lubrication. Nếu lỗi lặp lại, gọi kỹ thuật viên." },
+            { no: "21", alarm: "Bôi trơn (Lubrication)", cause: "Mức thấp", effect: "Báo động. Dừng ngắn sau 1 giờ nếu mức vẫn thấp.", instruction: "Châm thêm. Xem mục Weekly care. Nhấn nút Manual lubrication." },
+            { no: "22", alarm: "Dầu thủy lực (Hydraulic oil)", cause: "Nhiệt độ cao", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "23", alarm: "Dầu thủy lực (Hydraulic oil)", cause: "Mức thấp", effect: "Dừng ngắn (Short stop)", instruction: "Châm thêm. Xem mục Weekly care." },
+            { no: "24", alarm: "Tốc độ máy (Machine speed)", cause: "Tốc độ quá cao", effect: "Máy chuyển sang chế độ Sấy (Drying)", instruction: "Gọi kỹ thuật viên." },
+            // Mục Vượt quá thời gian chia làm 2 nhánh
+            { 
+                no: "24a", 
+                alarm: "Vượt quá thời gian (Gia nhiệt II)", 
+                cause: "Preheating II quá lâu (> 7'04\")", 
+                effect: "Máy chuyển về Preheating I", 
+                instruction: "Nhấn Alarm reset, sau đó nhấn Program up." 
+            },
+            { 
+                no: "24b", 
+                alarm: "Vượt quá thời gian (Dừng ngắn)", 
+                cause: "Dừng ngắn quá lâu (> 5 phút)", 
+                effect: "Máy chuyển sang Sấy (Drying)", 
+                instruction: "Reset máy, xem mục Short stop (trang 238)." 
+            },
+	{ no: "25", alarm: "Lỗi PLC (PLC fault)", cause: "Pin yếu, bộ nhớ đầy, quá áp hoặc chương trình bị ghi đè", effect: "Báo động", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "26", 
+                alarm: "Lỗi encoder góc (Angle encoder fault)", 
+                cause: "Encoder góc bị lỗi", 
+                effect: "- Khi Tube sealing: Về Preheating II<br>- Khi Motor start: Sang Sấy (Drying)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "28", 
+                alarm: "Lỗi máy ghi (Recorder fault)", 
+                cause: "Hết giấy, cassette ra ngoài, pin yếu", 
+                effect: "Dừng ngắn (Short stop)", 
+                instruction: "- Hết giấy: Xem mục Loading chart (trang 123/144)<br>- Pin yếu: Gọi kỹ thuật viên" 
+            },
+            { no: "29a", alarm: "ASU (Inverter fault)", cause: "Lỗi biến tần", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "29b", 
+                alarm: "ASU – Gia nhiệt cảm ứng", 
+                cause: "Lỗi bộ HI, cáp hoặc cuộn cảm", 
+                effect: "Báo động. Dừng ngắn khi cần ghép mí (splicing).", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { no: "30", alarm: "Bộ tách (Separator)", cause: "Mực nước cao", effect: "Máy reset về vị trí Zero", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "31", 
+                alarm: "Bộ gia nhiệt khí (Air superheater)", 
+                cause: "Nhiệt độ không đúng", 
+                effect: "- Preheating I–III: Không hành động<br>- Bước cao hơn: Sang Thông khí (Venting)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { no: "32", alarm: "Máy nén khí vô trùng", cause: "Áp suất thấp", effect: "Máy reset về Zero", instruction: "Gọi kỹ thuật viên." },
+            { no: "33", alarm: "Van hút (Suction valve)", cause: "Sai vị trí", effect: "Máy chuyển sang Sấy (Drying)", instruction: "Gọi kỹ thuật viên." },
+	{ 
+                no: "34a", 
+                alarm: "Hệ thống phun (Spray system)", 
+                cause: "Lỗi nạp (Filling up failure)", 
+                effect: "Máy reset về Preheating III", 
+                instruction: "Reset báo động và nâng bước chương trình (step up)." 
+            },
+            { 
+                no: "34b", 
+                alarm: "Hệ thống phun (Spray system)", 
+                cause: "Lỗi phun (Spraying failure)", 
+                effect: "Máy reset về Thông khí (Venting - 15 phút)", 
+                instruction: "Xem mục Mở cửa (trang 163)." 
+            },
+            { no: "35", alarm: "Dao khí (Air knife)", cause: "Nhiệt độ không đúng", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "36", alarm: "Van khí nạp (Air inlet valve)", cause: "Sai vị trí", effect: "Máy reset về Thông khí (Venting)", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "37a", 
+                alarm: "Vật liệu bao bì (Packaging material)", 
+                cause: "Nguồn cấp thấp (Supply low)", 
+                effect: "Báo động. Nếu không xử lý sẽ Dừng ngắn.", 
+                instruction: "Chuẩn bị ghép cuộn bao bì mới." 
+            },
+            { no: "37b", alarm: "ASU", cause: "Lỗi ghép mí (Splicing failure)", effect: "Dừng ngắn (Short stop)", instruction: "Thực hiện ghép mí thủ công." },
+            { 
+                no: "38a", 
+                alarm: "Vật liệu bao bì (Packaging material)", 
+                cause: "Đứt giấy BÊN TRONG buồng vô trùng", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Cắt bao bì trên hàm kẹp để làm trống ống giấy. Nhấn Program down một lần. Xem trang 240." 
+            },
+            { 
+                no: "38b", 
+                alarm: "Vật liệu bao bì (Packaging material)", 
+                cause: "Đứt giấy TRƯỚC KHI vào buồng vô trùng", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Dán nối giấy bằng băng keo. Nhấn Program up một lần và chạy nhấp (inch out) phần giấy nối." 
+            },
+            { 
+                no: "38c", 
+                alarm: "Vật liệu bao bì (Packaging material)", 
+                cause: "Rulo trong cassette ở vị trí cao", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Nới lỏng vật liệu bao bì để reset rulo." 
+            },
+            { 
+                no: "39", 
+                alarm: "Phần tử ghép SA (SA splicing element)", 
+                cause: "Nhiệt độ thấp", 
+                effect: "Dừng ngắn khi cần ghép mí", 
+                instruction: "Ở Preheating II: không cần hành động. Ở các bước cao hơn: gọi kỹ thuật viên." 
+            },
+	{ 
+                no: "40", 
+                alarm: "Bộ IH SA (IH unit SA)", 
+                cause: "Lỗi trong bộ IH, cáp hoặc cuộn cảm", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "41a", 
+                alarm: "SA (Dán dải băng)", 
+                cause: "Trong Preheating I: Vị trí dải băng (strip) chưa được xác nhận", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Mở cửa hộp chứa LS strip, đảm bảo dải băng đặt đúng vị trí trên các lỗ hút chân không." 
+            },
+            { 
+                no: "41b", 
+                alarm: "SA (Dán dải băng)", 
+                cause: "Trong Sản xuất (Production): Nguồn cấp dải băng thấp", 
+                effect: "Báo động. Dừng ngắn (Short stop) khi cần ghép dải băng.", 
+                instruction: "Lắp cuộn dải băng LS mới." 
+            },
+            { 
+                no: "42", 
+                alarm: "Rulo cán/Dao khí (Calender rollers/air knife)", 
+                cause: "Sai vị trí", 
+                effect: "Báo động và dừng máy", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "43a", 
+                alarm: "Hơi nước (Steam)", 
+                cause: "Nhiệt độ không đúng (Từ bước Spraying đến khi bắt đầu Sản xuất)", 
+                effect: "Máy reset về vị trí Zero", 
+                instruction: "Kiểm tra nguồn cấp từ hệ thống hơi của nhà máy." 
+            },
+            { 
+                no: "43b", 
+                alarm: "Hơi nước (Steam)", 
+                cause: "Nhiệt độ không đúng (Trong khi Sản xuất)", 
+                effect: "Báo động. Nếu nhiệt độ sai > 5 phút, dừng Sản xuất.", 
+                instruction: "Kiểm tra nguồn cấp từ hệ thống hơi của nhà máy." 
+            },
+            { 
+                no: "44", 
+                alarm: "Vệ sinh màng chắn hơi (Steam barrier cleaning)", 
+                cause: "Công tắc chìa khóa đang ở vị trí vệ sinh màng chắn hơi", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Không cần hành động nếu đang tiến hành vệ sinh khoang màng chắn hơi." 
+            },
+	{ 
+                no: "45a", 
+                alarm: "Van sản phẩm (Van A)", 
+                cause: "Sau khi Sấy (Drying): Nút 'Product set values OK' chưa được nhấn", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Nhấn nút 'Product set values OK' và tiếp tục." 
+            },
+            { 
+                no: "45b", 
+                alarm: "Van sản phẩm (Van A)", 
+                cause: "Trong khi Sản xuất: Không có sản phẩm từ bộ tiệt trùng (steriliser)", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Liên hệ quản lý sản xuất để xác nhận khởi động lại." 
+            },
+            { 
+                no: "45c", 
+                alarm: "Van sản phẩm (Van A)", 
+                cause: "Trong khi Dừng an toàn (Security Stop)", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Xem mục 'Dừng cung cấp sản phẩm khi dừng an toàn' trang 236." 
+            },
+            { no: "46", alarm: "Ống dẫn sản phẩm (Product pipe)", cause: "Sai vị trí", effect: "Máy reset về Thông khí (Venting)", instruction: "Kiểm tra vị trí ống dẫn sản phẩm." },
+            { no: "47", alarm: "Ống vệ sinh CIP (Cleaning pipe for CIP)", cause: "Sai vị trí", effect: "Chỉ hiển thị báo động", instruction: "Kiểm tra vị trí ống vệ sinh." },
+            { no: "48", alarm: "Van khí vô trùng (Van B)", cause: "Sai vị trí", effect: "Máy reset về Thông khí (Venting)", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "49", 
+                alarm: "Bể tiệt trùng (Sterilisation bath)", 
+                cause: "Sai mức dịch tiệt trùng", 
+                effect: "- Trong Sản xuất: Dừng ngắn<br>- Ở các bước thấp hơn: Báo động", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { no: "50", alarm: "Bể tiệt trùng (Sterilisation bath)", cause: "Mức nước thấp", effect: "Dừng ngắn (Short stop)", instruction: "Châm thêm nước đầy." },
+            { 
+                no: "51", 
+                alarm: "LS (Dải băng dán mép)", 
+                cause: "Nhiệt độ không đúng", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "- Ở Preheating II: Không cần hành động.<br>- Ở bước khác: Gọi kỹ thuật viên." 
+            },
+            { no: "52", alarm: "Bể tiệt trùng (Sterilisation bath)", cause: "Nhiệt độ dịch tiệt trùng thấp", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+	{ 
+                no: "53a", 
+                alarm: "Bể tiệt trùng (Sterilisation bath)", 
+                cause: "Nhiệt độ nước thấp", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "53b", 
+                alarm: "Bể tiệt trùng (Nâng cấp Service Pack 1)", 
+                cause: "Nhiệt độ nước không đúng", 
+                effect: "Máy reset về Dừng ngắn (Short stop)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { no: "54", alarm: "Nắp bể tiệt trùng (Lid of sterilisation bath)", cause: "Sai vị trí", effect: "Máy reset về Thông khí (Venting)", instruction: "Kiểm tra vị trí các nắp đậy." },
+            { 
+                no: "55a", 
+                alarm: "Mắt thần chỉnh thiết kế (Design correction photocells)", 
+                cause: "Mất 3 tín hiệu liên tiếp từ mắt thần", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Nhấn nút Alarm reset." 
+            },
+            { 
+                no: "55b", 
+                alarm: "Mắt thần chỉnh thiết kế", 
+                cause: "Mất 5 tín hiệu liên tiếp từ mắt thần", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Kiểm tra mắt thần đã đặt đúng vị trí cho Sản xuất (Production) chưa." 
+            },
+            { 
+                no: "55c", 
+                alarm: "ASU, Mắt thần chỉnh thiết kế", 
+                cause: "Mất tín hiệu từ mắt thần", 
+                effect: "Báo động. Vô hiệu hóa ghép mí. Dừng ngắn khi cần ghép.", 
+                instruction: "Vệ sinh mắt thần trong bộ phận ghép mí (splicing unit)." 
+            },
+            { no: "56", alarm: "Tràn sản phẩm (Overfilling)", cause: "Mức sản phẩm trong ống bao bì quá cao", effect: "Máy reset về Sấy (Drying)", instruction: "Gọi kỹ thuật viên." },
+            { no: "57", alarm: "Cốc vệ sinh (Cleaning cup)", cause: "Sai vị trí", effect: "Báo động (Alarm)", instruction: "Đảm bảo cốc vệ sinh được đặt đúng vị trí." },
+            { no: "58", alarm: "Gia nhiệt cảm ứng TS (Induction heating TS)", cause: "Lỗi bộ IH, cáp hoặc cuộn cảm", effect: "Máy reset về Sấy (Drying)", instruction: "Gọi kỹ thuật viên." },
+            { no: "59", alarm: "Đầu vào bộ gấp cuối (Infeed final folder)", cause: "Bị kẹt/tắc nghẽn (Congestion)", effect: "Trong Sản xuất: Dừng ngắn (Short stop)", instruction: "Loại bỏ các hộp hư hỏng và mảnh vụn bao bì thừa." },
+            { 
+                no: "60", 
+                alarm: "Thùng chứa dịch tiệt trùng (Sterilisation liquid tank)", 
+                cause: "Mức dịch thấp", 
+                effect: "Báo động. Dừng ngắn sau 5 phút nếu không xử lý.", 
+                instruction: "Thay can dịch tiệt trùng mới." 
+            },
+	{ 
+                no: "61", 
+                alarm: "Bộ gấp cuối (Final folder)", 
+                cause: "Lỗi quay (Rotation fault)", 
+                effect: "Dừng an toàn (Security stop)", 
+                instruction: "Lập tức loại bỏ các hộp hư và mảnh vụn bao bì khỏi bộ gấp cuối. Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "62", 
+                alarm: "Vệ sinh bên ngoài (External cleaning)", 
+                cause: "Lỗi nạp khay (Filling up tray)", 
+                effect: "Máy reset về Ready for external cleaning", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "63a", 
+                alarm: "Thiết bị phân phối (Distribution equipment)", 
+                cause: "Kẹt hộp trên băng tải (Package queue)", 
+                effect: "Dừng ngắn (Short stop)", 
+                instruction: "Kiểm tra thiết bị phân phối. Xem mục Conveyor congestion trang 253." 
+            },
+            { 
+                no: "63b", 
+                alarm: "Máy in phun Domino (Domino Ink Jet)", 
+                cause: "Lỗi thiết bị (Malfunction)", 
+                effect: "Dừng an toàn (Security stop)", 
+                instruction: "Kiểm tra máy in Domino. Xem tài liệu của nhà sản xuất." 
+            },
+            { 
+                no: "63c", 
+                alarm: "Máy in phun Domino (Domino Ink Jet)", 
+                cause: "Mức mực không đúng", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Châm thêm mực. Xem tài liệu của nhà sản xuất." 
+            },
+            { 
+                no: "63d", 
+                alarm: "Bộ gấp cuối (Final Folder)", 
+                cause: "Kẹt bộ cấp bên (Side feeder congestion)", 
+                effect: "Dừng an toàn (Security stop)", 
+                instruction: "Lập tức loại bỏ bao bì hư. Reset bộ cấp bên. Xem trang 253." 
+            },
+            { 
+                no: "64", 
+                alarm: "Ống khí vô trùng (Sterile air pipe)", 
+                cause: "Sai vị trí", 
+                effect: "Máy reset về Thông khí (Venting)", 
+                instruction: "Kiểm tra vị trí ống khí vô trùng." 
+            },
+            { 
+                no: "65a", 
+                alarm: "HI không đúng vị trí (nếu lắp HI)", 
+                cause: "Ống Nitơ hoặc cốc vệ sinh sai vị trí", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Đảm bảo ống Nitơ hoặc cốc vệ sinh được lắp đúng." 
+            },
+            { 
+                no: "65b", 
+                alarm: "Van HL không đúng vị trí (nếu lắp HL)", 
+                cause: "Sai vị trí", 
+                effect: "Trong khi Phun (Spraying): Máy về Thông khí (Venting)", 
+                instruction: "Kiểm tra vị trí của bộ treo con lắc (pendulum suspension) trong van khí." 
+            },
+	{ 
+                no: "66a", 
+                alarm: "Vòi phun HI (Nozzle, HI)", 
+                cause: "Vòi phun sai vị trí", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Đảm bảo vòi phun được lắp đúng vị trí." 
+            },
+            { 
+                no: "66b", 
+                alarm: "Nhiệt độ tiệt trùng HL", 
+                cause: "Nhiệt độ tiệt trùng HL không đúng", 
+                effect: "Trong bước Sấy (Drying): Máy reset về Thông khí (Venting)", 
+                instruction: "Kiểm tra gioăng ống nạp thấp bên trong ống bao bì. Kiểm tra bụi bẩn tại bộ lọc khí HL." 
+            },
+            { 
+                no: "67a", 
+                alarm: "Áp suất khí thấp, HI", 
+                cause: "Bình Nitơ/khí bị cạn hoặc áp suất không đạt kịp thời", 
+                effect: "Dừng ngắn (Short stop)", 
+                instruction: "Kiểm tra nguồn cấp Nitơ/khí và các đầu kết nối." 
+            },
+            { 
+                no: "67b", 
+                alarm: "Áp suất khí thấp, HL", 
+                cause: "Bình Nitơ bị cạn", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Kiểm tra nguồn cấp Nitơ." 
+            },
+            { 
+                no: "68", 
+                alarm: "Vòi phun dừng ngắn LS (LS short stop nozzle)", 
+                cause: "Phần tử dừng ngắn bị hỏng", 
+                effect: "Báo động. Tại bất kỳ lệnh Dừng (Stop) nào, máy sẽ reset về Thông khí (Venting).", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "69", 
+                alarm: "Bình phun HI (Spray tank, HI)", 
+                cause: "Bình phun không được nạp đầy", 
+                effect: "Máy reset về Preheating III", 
+                instruction: "Reset và khởi động lại." 
+            },
+            { 
+                no: "70a", 
+                alarm: "Mức bình phun HI (Spray tank level, HI)", 
+                cause: "Không đạt mức chuẩn trong thời gian quy định", 
+                effect: "Máy reset về Thông khí (Venting)", 
+                instruction: "Vệ sinh vòi phun HI bằng khí nén. Xem mục Công tắc tay quay trang 240." 
+            },
+            { 
+                no: "70b", 
+                alarm: "Lỗi lưu lượng HL (Flow error, HL)", 
+                cause: "Trong khi Nạp (Filling): Lưu lượng sản phẩm không đúng", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "70c", 
+                alarm: "Lỗi lưu lượng HL (Flow error, HL)", 
+                cause: "Trong khi Sản xuất: Lưu lượng sản phẩm không đúng", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Liên hệ quản lý sản xuất để xác nhận tiếp tục sản xuất." 
+            },
+	{ 
+                no: "71a", 
+                alarm: "Van điều tiết (Regulating valve - nếu không lắp HL)", 
+                cause: "Rò rỉ màng (Membrane leakage)", 
+                effect: "Máy reset về Thông khí (Venting)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "71b", 
+                alarm: "Van lưu lượng hằng số, HL (Constant flow valve, HL)", 
+                cause: "Trong Sản xuất: Rò rỉ màng", 
+                effect: "Máy reset về Thông khí (Venting)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "71c", 
+                alarm: "Van lưu lượng hằng số, HL (Constant flow valve, HL)", 
+                cause: "Trong CIP: Rò rỉ màng", 
+                effect: "Máy reset về vị trí Zero", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "72a", 
+                alarm: "Van điều tiết (Regulating valve - nếu không lắp HL)", 
+                cause: "Sai vị trí", 
+                effect: "Máy reset về Thông khí (Venting)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "72b", 
+                alarm: "Van lưu lượng hằng số, HL (Constant flow valve, HL)", 
+                cause: "Piston định lượng sai vị trí", 
+                effect: "- Trong Drying: Reset về Venting<br>- Trong CIP/Venting: Báo động", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "72c", 
+                alarm: "Van lưu lượng hằng số, HL (Constant flow valve, HL)", 
+                cause: "Trong Sản xuất: Động cơ bước (stepper motor) ngoài phạm vi", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Kiểm tra giá trị trên bánh xe số (thumb wheel). Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "73", 
+                alarm: "Nhiệt độ HI (Temperature, HI)", 
+                cause: "Nhiệt độ không đúng", 
+                effect: "- Trước Spraying: Ngắt quãng bước tăng (Step up)<br>- Trong Spraying: Reset về Venting", 
+                instruction: "Xem mục Mở cửa trang 163. Vệ sinh vòi phun HI bằng khí nén." 
+            },
+            { 
+                no: "74a", 
+                alarm: "SA (Hệ thống dán dải băng)", 
+                cause: "Đứt dải băng LS (LS strip broken)", 
+                effect: "Máy reset về Sấy (Drying) hoặc ngắt quãng chạy nhấp (Inching)", 
+                instruction: "Xỏ lại dải băng (Thread strip)." 
+            },
+            { 
+                no: "74b", 
+                alarm: "SA (Hệ thống dán dải băng)", 
+                cause: "Chạy nhấp tốc độ thấp khi dải băng LS đã dính vào bao bì", 
+                effect: "Ngắt quãng chạy nhấp (Inching interrupted)", 
+                instruction: "Cắt dải băng." 
+            },
 
-            <tr>
-                <td class="no-col">25</td>
-                <td>Lỗi PLC: Pin yếu, bộ nhớ đầy, sốc điện</td>
-                <td>Báo động</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">26</td>
-                <td>Lỗi bộ mã hóa góc (Angle encoder)</td>
-                <td>Reset về Preheating II hoặc Drying</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">30</td>
-                <td>Bộ tách (Separator): Mức nước cao</td>
-                <td>Máy reset về Zero</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">32</td>
-                <td>Máy nén khí vô trùng: Áp suất thấp</td>
-                <td>Máy reset về Zero</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
+	{ 
+                no: "75a", 
+                alarm: "Ống nạp thấp (Lower filling pipe)", 
+                cause: "Sai vị trí trong khi Gia nhiệt (Preheating)", 
+                effect: "Báo động (Alarm)", 
+                instruction: "Đảm bảo ống nạp thấp được kết nối đúng cách." 
+            },
+            { 
+                no: "75b", 
+                alarm: "Vị trí thiết kế (Design position)", 
+                cause: "Sai vị trí trong khi Sản xuất", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "76", 
+                alarm: "Thùng chứa dịch tiệt trùng", 
+                cause: "Mức dịch quá cao", 
+                effect: "Máy reset về Sấy (Drying)", 
+                instruction: "Ngắt ngay kết nối nhanh (quick-connection) khỏi thùng chứa dịch. Gọi kỹ thuật viên." 
+            },
+            { 
+                no: "77", 
+                alarm: "Bộ gấp cuối (Final folder)", 
+                cause: "Kẹt hộp đầu ra (Outfeed congestion)", 
+                effect: "Dừng an toàn (Security stop)", 
+                instruction: "Lập tức loại bỏ bao bì hư và mảnh vụn khỏi bộ gấp cuối. Reset đầu ra. Xem mục Stop." 
+            },
+            { no: "78", alarm: "Dán tai, dưới bên trái (Flap sealing, bottom left)", cause: "Nhiệt độ không đúng", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "79", alarm: "Dán tai, dưới bên phải (Flap sealing, bottom right)", cause: "Nhiệt độ không đúng", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "80", alarm: "Dán tai, trên bên trái (Flap sealing, top left)", cause: "Nhiệt độ không đúng", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "81", alarm: "Dán tai, trên bên phải (Flap sealing, top right)", cause: "Nhiệt độ không đúng", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "101", alarm: "Điện trở nhiệt (Heating elements)", cause: "Nhiệt độ thấp", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { 
+                no: "102", 
+                alarm: "Hộp chứa băng dán vá (Patch strip magazine)", 
+                cause: "Nguồn cấp băng thấp", 
+                effect: "Báo động. Nếu không xử lý sẽ Dừng ngắn.", 
+                instruction: "Thay cuộn băng dán mới (Patch strip)." 
+            },
+            { 
+                no: "103", 
+                alarm: "Hộp chứa băng dán tai (Tab strip magazine)", 
+                cause: "Nguồn cấp băng thấp", 
+                effect: "Báo động. Nếu không xử lý sẽ Dừng ngắn.", 
+                instruction: "Thay cuộn băng dán mới (Tab strip)." 
+            },
+	{ no: "104", alarm: "Bộ dán miếng vá (Patch sealing unit)", cause: "Thiếu miếng vá (Patch missing)", effect: "Dừng ngắn (Short stop)", instruction: "Xem mục Thiếu tab hoặc patch trang 242." },
+            { no: "105a", alarm: "Bộ dán Tab (Tab sealing unit)", cause: "Thiếu Tab", effect: "Dừng ngắn (Short stop)", instruction: "Xem mục Thiếu tab hoặc patch trang 242." },
+            { no: "105b", alarm: "Bộ dán Tab (Tab sealing unit)", cause: "Cài đặt sai mắt thần nhận diện băng đen", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "106", alarm: "Vị trí thiết kế (Design position)", cause: "Sai vị trí", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "107", alarm: "Động cơ Servo (Servomotor)", cause: "Lỗi motor", effect: "Dừng ngắn. Vô hiệu hóa PullTab.", instruction: "Gọi kỹ thuật viên." },
+            { no: "108", alarm: "Vòng lặp đầu ra (Outfeed loop)", cause: "Thiếu vật liệu bao bì", effect: "Dừng ngắn (Short stop)", instruction: "Gọi kỹ thuật viên." },
+            { no: "109", alarm: "Vòng lặp đầu vào (Infeed loop)", cause: "Thiếu vật liệu bao bì", effect: "Dừng ngắn. Vô hiệu hóa PullTab.", instruction: "Gọi kỹ thuật viên." },
+            { no: "115", alarm: "Trượt giấy (Paper slipping)", cause: "Rulo trục quay PullTab bị nhả", effect: "Dừng ngắn. Vô hiệu hóa PullTab.", instruction: "Áp lại rulo trục quay. Xem mục trượt vật liệu bao bì trang 244." },
+            { no: "116", alarm: "Bộ phận phế thải (Waste unit)", cause: "Bộ phận phế thải đầy", effect: "Báo động. Nếu không xử lý sẽ Dừng ngắn.", instruction: "Đổ phế thải trong bộ phận phế thải." },
 
-            <tr>
-                <td class="no-col">34</td>
-                <td>Hệ thống phun: Lỗi nạp hoặc phun</td>
-                <td>Reset về Preheating III hoặc Venting</td>
-                <td class="instruction-col">Reset báo động và tăng bước máy</td>
-            </tr>
-            <tr>
-                <td class="no-col">37</td>
-                <td>Vật liệu bao bì: Nguồn cung thấp hoặc Lỗi nối ASU</td>
-                <td>Báo động; Dừng ngắn</td>
-                <td class="instruction-col">Dán nối cuộn mới hoặc nối thủ công</td>
-            </tr>
-            <tr>
-                <td class="no-col">38</td>
-                <td>Vật liệu bao bì: Đứt cuộn (trong/ngoài buồng)</td>
-                <td>Máy reset về Drying</td>
-                <td class="instruction-col">Cắt bao bì thừa; Dán nối lại; Xem trang 240</td>
-            </tr>
+];
 
-            <tr>
-                <td class="no-col">45</td>
-                <td>Van sản phẩm (Van A): Chưa nhấn OK hoặc Không sản phẩm</td>
-                <td>Báo động hoặc reset về Drying</td>
-                <td class="instruction-col">Nhấn nút OK; Liên hệ quản lý xác nhận</td>
-            </tr>
-            <tr>
-                <td class="no-col">49/50</td>
-                <td>Bể tiệt trùng: Mức dịch sai hoặc mức nước thấp</td>
-                <td>Dừng ngắn hoặc Báo động</td>
-                <td class="instruction-col">Gọi kỹ thuật; Châm thêm nước</td>
-            </tr>
-            <tr>
-                <td class="no-col">52/53</td>
-                <td>Bể tiệt trùng: Nhiệt độ thấp (dịch/nước)</td>
-                <td>Dừng ngắn hoặc reset về Drying</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
+        const tableBody = document.getElementById('alarm-body');
+        const searchInput = document.getElementById('searchInput');
 
-            <tr>
-                <td class="no-col">55</td>
-                <td>Mắt thần (Photocells): Mất tín hiệu</td>
-                <td>Báo động hoặc reset về Drying</td>
-                <td class="instruction-col">Vệ sinh mắt thần; Kiểm tra vị trí</td>
-            </tr>
-            <tr>
-                <td class="no-col">58</td>
-                <td>Gia nhiệt cảm ứng TS: Lỗi IH unit/cáp</td>
-                <td>Máy reset về Drying</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">61</td>
-                <td>Bộ gấp cuối (Final Folder): Lỗi xoay</td>
-                <td>Dừng an ninh</td>
-                <td class="instruction-col">Dọn sạch hộp hỏng ngay; Gọi kỹ thuật</td>
-            </tr>
-            <tr>
-                <td class="no-col">64</td>
-                <td>Side feeder tắc nghẽn hoặc Ống khí vô trùng sai vị trí</td>
-                <td>Dừng an ninh hoặc reset về Venting</td>
-                <td class="instruction-col">Dọn hộp hỏng; Reset side feeder; Kiểm tra ống khí</td>
-            </tr>
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            data.forEach(item => {
+                // Xác định class màu sắc cho Effect
+                let effectClass = '';
+                if (item.effect.includes('Zero') || item.effect.includes('Venting')) effectClass = 'effect-critical';
+                else if (item.effect.includes('Short stop') || item.effect.includes('Dừng ngắn')) effectClass = 'effect-warning';
 
-            <tr>
-                <td class="no-col">68</td>
-                <td>Vòi phun LS (ngắn): Phần tử bị hỏng</td>
-                <td>Báo động; Reset về Venting</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">74</td>
-                <td>Dán dải (SA): Đứt dải LS hoặc Inching sai</td>
-                <td>Reset về Drying hoặc ngừng Inching</td>
-                <td class="instruction-col">Luồn lại dải; Cắt dải</td>
-            </tr>
+                const row = `
+                    <tr>
+                        <td class="no-column" data-label="NO.">${item.no}</td>
+                        <td class="alarm-column" data-label="Alarm">${item.alarm}</td>
+                        <td data-label="Cause">${item.cause}</td>
+                        <td class="${effectClass}" data-label="Effect">${item.effect}</td>
+                        <td class="instruction-column" data-label="Instruction">${item.instruction}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
 
-            <tr>
-                <td class="no-col">75</td>
-                <td>Ống nạp dưới: Sai vị trí</td>
-                <td>Báo động hoặc reset về Drying</td>
-                <td class="instruction-col">Kiểm tra kết nối ống nạp; Gọi kỹ thuật</td>
-            </tr>
-            <tr>
-                <td class="no-col">77</td>
-                <td>Đầu ra bộ gấp cuối: Tắc nghẽn</td>
-                <td>Dừng an ninh</td>
-                <td class="instruction-col">Dọn hộp hỏng; Reset outfeed; Xem mục Stop</td>
-            </tr>
-            <tr>
-                <td class="no-col">78-81</td>
-                <td>Dán tai (Flap sealing): Sai nhiệt độ (Trái/Phải/Trên/Dưới)</td>
-                <td>Dừng ngắn</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">101</td>
-                <td>Thanh nhiệt: Nhiệt độ thấp</td>
-                <td>Dừng ngắn</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">102/103</td>
-                <td>Băng dán (Patch/Tab strip): Sắp hết dải</td>
-                <td>Báo động; Dừng ngắn</td>
-                <td class="instruction-col">Thay dải mới</td>
-            </tr>
-            <tr>
-                <td class="no-col">104/105</td>
-                <td>Thiếu Patch hoặc Tab</td>
-                <td>Dừng ngắn</td>
-                <td class="instruction-col">Xem mục thiếu Tab/Patch trang 242</td>
-            </tr>
-            <tr>
-                <td class="no-col">107</td>
-                <td>Servomotor: Lỗi motor</td>
-                <td>Dừng ngắn; Vô hiệu hóa PullTab</td>
-                <td class="instruction-col">Gọi kỹ thuật viên</td>
-            </tr>
-            <tr>
-                <td class="no-col">115</td>
-                <td>Trượt giấy: Trục PullTab bị nhả</td>
-                <td>Dừng ngắn; Vô hiệu PullTab</td>
-                <td class="instruction-col">Áp lại trục; Xem trang 244</td>
-            </tr>
-            <tr>
-                <td class="no-col">116</td>
-                <td>Đơn vị rác: Đầy rác</td>
-                <td>Báo động; Dừng ngắn</td>
-                <td class="instruction-col">Đổ rác</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+        // Xử lý tìm kiếm
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = alarmData.filter(item => 
+                item.no.toLowerCase().includes(term) ||
+                item.alarm.toLowerCase().includes(term) ||
+                item.cause.toLowerCase().includes(term)
+            );
+            renderTable(filtered);
+        });
 
-<script>
-function filterTable() {
-    let input = document.getElementById("searchInput");
-    let filter = input.value.toUpperCase();
-    let table = document.getElementById("alarmTable");
-    let tr = table.getElementsByTagName("tr");
-
-    for (let i = 1; i < tr.length; i++) {
-        let textContent = tr[i].textContent || tr[i].innerText;
-        tr[i].style.display = textContent.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-    }
-}
-</script>
-
+        // Khởi tạo bảng
+        renderTable(alarmData);
+    </script>
 </body>
 </html>
